@@ -14,6 +14,7 @@ require_once($CFG->dirroot . '/backup/moodle2/backup_plan_builder.class.php');
 require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
 require_once($CFG->dirroot . '/backup/util/ui/import_extensions.php');
  
+
  
 //$course_import_from = 7;
 //$course_restore_to = 11;
@@ -269,6 +270,11 @@ function enrol_user_if_not_exists($type='teacher',$userid,$courseid,$timestart=0
 
         $role = $DB->get_record('role', array('shortname' => $type), '*', MUST_EXIST);
 
+	$cc = $DB->get_record('course',array('id'=>$courseid),'*');
+	$cc->visible=1;
+	$cc->visibleold=1;
+	$DB->update_record_raw('course', $cc);
+
 	$plugin->enrol_user($instance, $userid, $role->id, $timestart, $timeend, $status);
 	
 	$hasil['result']=31;
@@ -371,18 +377,27 @@ function index(){
 
 
 function pditt_functions($post,$get){
+	global $CFG;
 	$B = get_defined_functions();
 	$H=array();
 	foreach($B['user'] as $y){
 		if (substr($y,0,6)=='pditt_')
 			$H[]=$y;
 	}
-	$hasil = array('result'=>12,'functions'=>$H);
+	$hasil = array('result'=>12,'cfg'=>array(),'functions'=>$H);
 	return $hasil;
 
 }
 
+function pditt_create_dosen($post,$get){
+	global $GLOBAL;
 
+	$username = $get['username'];
+	$password = $get['password'];
+
+	return create_user_if_not_exists($username,$password,$username,$username . '@local','123123$$','dosen');
+
+}
 
 function pditt_create_user_and_enrol($post,$get){
 	global $GLOBAL;
@@ -479,9 +494,76 @@ function pditt_create_course($post,$get){
 	return $hasil;
 	
 }
+
+function pditt_create_course_dan_dosen($post,$get){
+	global $GLOBAL;
+	$h = get_secure_info($post['e']);
+
+	$username = $h['username'];
+	$password = $h['password'];
+
+	
+	$o=cek_user($username,$password);
+	if (!$o){
+		return array('result'=>0);
+	} else {
+		$p = $o['d'];
+		$userid = $o['userid'];
+	}
+
+	$univ = $h['univ'];
+	$kodemk = $h['kodemk'];
+	$namamk = $h['namamk'];
+	$summary = $namamk;
+	$namacategory = $h['category'];
+
+	$cat = create_category_if_not_exists($namacategory,$namacategory . ' (PDITT)');
+	$idcourse = create_course_pditt($cat,$univ,$kodemk,$namamk,$summary);
+	enrol_author_if_not_exists($userid,$idcourse);
+	enrol_dosen_if_not_exists($userid,$idcourse);
+
+	$hasil = array (
+				'result'=> 21,
+				'courseid'=>$idcourse,
+				'courseurl'=>$GLOBAL['course_url'] . '?id=' . $idcourse,
+				'coursemgt'=>$GLOBAL['course_mgt'],
+				'lurl'=>$GLOBAL['login_url']
+			);
+
+	return $hasil;
+}
+
+
+
 function pditt_create_course_only($post,$get){
 	global $GLOBAL;
 	$h = get_secure_info($post['e']);
+
+	$univ = $h['univ'];
+	$kodemk = $h['kodemk'];
+	$namamk = $h['namamk'];
+	$summary = $namamk;
+	$namacategory = $h['category'];
+
+	$cat = create_category_if_not_exists($namacategory,$namacategory . ' (PDITT)');
+	$idcourse = create_course_pditt($cat,$univ,$kodemk,$namamk,$summary);
+
+	$hasil = array (
+				'result'=> 21,
+				'courseid'=>$idcourse,
+				'courseurl'=>$GLOBAL['course_url'] . '?id=' . $idcourse,
+				'coursemgt'=>$GLOBAL['course_mgt'],
+				'lurl'=>$GLOBAL['login_url']
+			);
+
+	return $hasil;
+}
+
+function pditt_create_course_test($post,$get){
+	global $GLOBAL;
+	//$h = get_secure_info($post['e']);
+	$h = $get;
+
 
 	$univ = $h['univ'];
 	$kodemk = $h['kodemk'];

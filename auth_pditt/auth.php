@@ -88,7 +88,7 @@ class auth_plugin_pditt extends auth_plugin_base {
 	}
 
 	function can_edit_profile(){
-		return false;
+		return true;
 	}
 
 	function change_password_url(){
