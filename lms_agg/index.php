@@ -396,7 +396,7 @@ function pditt_functions($post,$get){
 
 }
 
-function pditt_create_dosen($post,$get){
+function pditt_create_dosen_g($post,$get){
 	global $GLOBAL;
 
 	$username = $get['username'];
@@ -405,6 +405,21 @@ function pditt_create_dosen($post,$get){
 	return create_user_if_not_exists($username,$password,$username,$username . '@local','123123$$','dosen');
 
 }
+
+function pditt_create_dosen($post,$get){
+	global $GLOBAL;
+	$hasil = get_secure_info($post['e']);
+
+	$username = $hasil['username'];
+	$password = $hasil['password'];
+	$email = $hasil['email'];
+	$nama = $hasil['nama'];
+	$guid = $hasil['guid'];
+
+	return create_dosen_if_not_exists($username,$password,$nama,$email,$guid);
+
+}
+
 
 function pditt_create_user_and_enrol($post,$get){
 	global $GLOBAL;
