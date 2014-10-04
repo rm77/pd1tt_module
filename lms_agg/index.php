@@ -478,7 +478,9 @@ function pditt_create_course($post,$get){
 
 	$o=cek_user($username,$password);
 	if (!$o){
-		return array('result'=>0);
+		$user = create_dosen_if_not_exists($hasil['username'],$hasil['password'],$hasil['nama'],$hasil['email'],$hasil['guid']);
+		$userid=$user['userid'];
+		//return array('result'=>0);
 	} else {
 		$p = $o['d'];
 		$userid = $o['userid'];
