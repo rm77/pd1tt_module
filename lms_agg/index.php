@@ -1,7 +1,7 @@
 <?
 
 //a
-
+error_reporting(0);
 require('../config.php');
 require_once( $CFG->libdir . '/moodlelib.php');
 require_once( $CFG->libdir . '/adminlib.php');
@@ -247,8 +247,15 @@ function create_dosen_if_not_exists($username,$password,$student_name,$email,$gu
 type = student, teacher
 */
 
-function enrol_user_if_not_exists($type='teacher',$userid,$courseid,$timestart=0,$timeend=0,$status=null) {
+function enrol_user_if_not_exists($type='teacher',$userid,$courseid,$timestart=0,$timeend=0,$status=null,$DEBUG=false) {
 	global $DB;
+
+
+	//$DEBUG=true;
+	if ($DEBUG==true){
+		print_r(array($type,$userid,$courseid));
+	}	
+
 	
 	$hasil=array();
 
@@ -505,7 +512,8 @@ function pditt_create_course_dan_dosen($post,$get){
 	
 	$o=cek_user($username,$password);
 	if (!$o){
-		return array('result'=>0);
+		$user = create_dosen_if_not_exists($hasil['username'],$hasil['password'],$hasil['nama'],$hasil['email'],$hasil['guid']);
+		$userid=$user['userid'];
 	} else {
 		$p = $o['d'];
 		$userid = $o['userid'];
