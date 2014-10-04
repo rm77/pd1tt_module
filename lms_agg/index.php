@@ -517,7 +517,7 @@ function pditt_create_course($post,$get){
 	
 }
 
-function pditt_create_course_dan_dosen($post,$get){
+function pditt_create_course_dan_enrol_dosen($post,$get){
 	global $GLOBAL;
 	$h = get_secure_info($post['e']);
 
