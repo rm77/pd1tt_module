@@ -478,9 +478,7 @@ function pditt_create_course($post,$get){
 
 	$o=cek_user($username,$password);
 	if (!$o){
-		$user = create_dosen_if_not_exists($hasil['username'],$hasil['password'],$hasil['nama'],$hasil['email'],$hasil['guid']);
-		$userid=$user['userid'];
-		//return array('result'=>0);
+		return array('result'=>0, 'msg'=>'pditt_create_course cek user gagal');
 	} else {
 		$p = $o['d'];
 		$userid = $o['userid'];
@@ -514,8 +512,7 @@ function pditt_create_course_dan_dosen($post,$get){
 	
 	$o=cek_user($username,$password);
 	if (!$o){
-		$user = create_dosen_if_not_exists($hasil['username'],$hasil['password'],$hasil['nama'],$hasil['email'],$hasil['guid']);
-		$userid=$user['userid'];
+		return array('result'=>0, 'msg'=>'pditt_create_course_dan_dosen cek user gagal');
 	} else {
 		$p = $o['d'];
 		$userid = $o['userid'];
