@@ -415,7 +415,7 @@ function pditt_create_dosen($post,$get){
 	$nama = $hasil['nama'];
 	$guid = $hasil['guid'];
 
-	return create_dosen_if_not_exists($username,$password,$nama,$email,$guid);
+	return array('result'=>21, 'userdetail'=> create_dosen_if_not_exists($username,$password,$nama,$email,$guid));
 
 }
 
