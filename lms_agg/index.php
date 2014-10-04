@@ -1,7 +1,6 @@
 <?
 
 //a
-error_reporting(0);
 require('../config.php');
 require_once( $CFG->libdir . '/moodlelib.php');
 require_once( $CFG->libdir . '/adminlib.php');
