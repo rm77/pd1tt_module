@@ -386,7 +386,6 @@ $cmd = isset($_GET['c']) ? $_GET['c'] : (isset($_POST['c']) ? $_POST['c'] : 'ind
 //$cmd = isset($_POST['c']) ? $_POST['c'] : 'index';
 $auth = isset($_GET['a']) ? $_GET['a'] : 'xx';
 
-
 if (function_exists($cmd)){
 	echo json_encode($cmd($post=$_POST,$get=$_GET));
 } else {
