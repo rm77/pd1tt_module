@@ -359,6 +359,27 @@ function un_enrol_author($userid,$courseid){
 	return my_unenrol_user('coursecreator', $userid, $courseid);
 }
 
+
+function enter($userid,$password){
+	global $CFG,$USER;
+	$authsequence = get_enabled_auth_plugins(true);
+	foreach($authsequence as $authname){
+		$authplugin = get_auth_plugin($authname);
+		$authplugin->loginpage_hook();
+	}
+
+	$frm=new stdClass();
+	$frm->username = $userid;
+	$frm->password = $password;
+	$user = authenticate_user_login($frm->username,$frm->password);
+	if ($user){
+		complete_user_login($user);
+		set_moodle_cookie('');
+	}
+	return $USER;
+	
+}
+
 /* controller */
 
 $cmd = isset($_GET['c']) ? $_GET['c'] : (isset($_POST['c']) ? $_POST['c'] : 'index');
@@ -382,6 +403,8 @@ function index(){
 }
 
 
+
+
 function pditt_functions($post,$get){
 	global $CFG;
 	$B = get_defined_functions();
@@ -402,6 +425,39 @@ function pditt_create_dosen_g($post,$get){
 	$password = $get['password'];
 
 	return create_user_if_not_exists($username,$password,$username,$username . '@local','123123$$','dosen');
+
+}
+
+
+function pditt_enter_g($post,$get){
+	global $GLOBAL;
+	$username = $get['username'];
+	$password = $get['password'];
+	
+	$hasil = enter($username,$password);
+
+	if ($hasil->id==0){
+		return array('result'=>0,'msg'=>'Login Gagal');
+	} else {
+		return array('result'=>51,'user'=>$hasil);
+	}
+
+}
+
+function pditt_enter($post,$get){
+	global $GLOBAL;
+	$hasil = get_secure_info($post['e']);
+
+	$username = $hasil['username'];
+	$password = $hasil['password'];
+	
+	$result = enter($username,$password);
+
+	if ($result->id==0){
+		return array('result'=>0,'msg'=>'Login Gagal');
+	} else {
+		return array('result'=>51,'user'=>$result);
+	}
 
 }
 
