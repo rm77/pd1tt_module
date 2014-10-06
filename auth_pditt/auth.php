@@ -41,7 +41,8 @@ class auth_plugin_pditt extends auth_plugin_base {
     function user_login ($username, $password) {
 	    global $CFG, $DB, $USER;
 
-            if (!$user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+            //if (!$user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+            if (!$user = $DB->get_record('user', array('username'=>$username))) {
 	           return false;
 	    }
 
