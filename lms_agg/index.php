@@ -376,7 +376,7 @@ function enter($userid,$password){
 		complete_user_login($user);
 		set_moodle_cookie('');
 	}
-	return $USER;
+	return $user;
 	
 }
 
@@ -531,6 +531,25 @@ function pditt_create_user_and_enrol($post,$get){
 	}
 
 
+}
+
+function pditt_get_data($post,$get){
+	global $GLOBAL;
+	$hasil = get_secure_info($post['e']);
+	$o=cek_user($hasil['username'],$hasil['password']);
+	$p = $o['d'];
+	$userid = $o['userid'];
+	
+	$hasil = array(	'result'=>61,
+			'user'=>$hasil['username'], 
+			'go'=>$hasil['murl'],
+			'u'=>$hasil['username'], 
+			'o'=>md5($hasil['username'] . $p . $hasil['qkey'] . 'ROMBONGSOTO'), 
+			'qkey'=>$hasil['qkey'],
+			'lurl'=>$GLOBAL['login_url']
+		);
+	return $hasil;
+	
 }
 
 function pditt_create_course($post,$get){
