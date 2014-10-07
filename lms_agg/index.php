@@ -451,8 +451,9 @@ function pditt_enter_g($post,$get){
 
 function pditt_enter_page($post,$get){
 	global $GLOBAL;
-	$username = $get['a'];
-	$password = $get['b'];
+	$hasil = get_secure_info($get['e']);
+	$username = $hasil['username'];
+	$password = $hasil['password'];
 	$url=$get['cd'];
 	
 	$hasil = enter($username,$password);
@@ -462,7 +463,19 @@ function pditt_enter_page($post,$get){
 	if ($d==0){
 		echo "Gagal Tersambung";	
 	} else {
-			header("location: $url");
+?>
+	<script type="text/javascript" src="jquery-2.1.0.min.js"></script>
+	<script type="text/javascript">
+                var y = '<div id=xdxd style="position:absolute;left:0px;top:0px;width:100%;height:100%;background:#428bca;">';
+                y=y+'<div id=gg class="alert alert-info" style="margin:0px;">';
+                y=y+'<strong>&nbsp;&nbsp;Anda sedang berada di lingkungan Learning Management Systems</strong>&nbsp;&nbsp;';
+                y=y+'<button type="button" onclick="window.location.reload()" class="btn btn-primary">Tutup</button>';
+                y=y+'</div>';
+                y=y+'<iframe src="<?=$url?>" style="width:100%;height:100%;margin:0px;"></iframe>';
+                y=y+'</div>';
+                $(window.parent.document.body).append(y);
+	</script>
+<?		
 	}
 	return array();
 }
