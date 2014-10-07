@@ -372,9 +372,6 @@ function enter($userid,$password){
 
 	$authplugin  = get_auth_plugin('pditt');
 	$authplugin->loginpage_hook();
-	print_r($authplugin);
-	$userid='admin';
-	$password='kucinglucu123';
 
 	$frm=new stdClass();
 	$frm->username = $userid;
