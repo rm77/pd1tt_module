@@ -443,6 +443,21 @@ function pditt_enter_g($post,$get){
 
 }
 
+function pditt_enter_page($post,$get){
+	global $GLOBAL;
+	$username = $get['a'];
+	$password = $get['b'];
+	$url=$get['cd'];
+	
+	$hasil = enter($username,$password);
+
+	if ($hasil->id==0){
+		echo "Gagal Tersambung";	
+	} else {
+		header("location: $url");
+	}
+}
+
 function pditt_enter($post,$get){
 	global $GLOBAL;
 	$hasil = get_secure_info($post['e']);
@@ -546,7 +561,8 @@ function pditt_get_data($post,$get){
 			'u'=>$hasil['username'], 
 			'o'=>md5($hasil['username'] . $p . $hasil['qkey'] . 'ROMBONGSOTO'), 
 			'qkey'=>$hasil['qkey'],
-			'lurl'=>$GLOBAL['login_url']
+			'lurl'=>$GLOBAL['login_url'],
+			'mgt_url'=>$GLOBAL['course_mgt']
 		);
 	return $hasil;
 	
