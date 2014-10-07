@@ -362,11 +362,19 @@ function un_enrol_author($userid,$courseid){
 
 function enter($userid,$password){
 	global $CFG,$USER;
+/*
 	$authsequence = get_enabled_auth_plugins(true);
 	foreach($authsequence as $authname){
 		$authplugin = get_auth_plugin($authname);
 		$authplugin->loginpage_hook();
 	}
+*/
+
+	$authplugin  = get_auth_plugin('pditt');
+	$authplugin->loginpage_hook();
+	print_r($authplugin);
+	$userid='admin';
+	$password='kucinglucu123';
 
 	$frm=new stdClass();
 	$frm->username = $userid;
