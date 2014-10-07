@@ -362,16 +362,18 @@ function un_enrol_author($userid,$courseid){
 
 function enter($userid,$password){
 	global $CFG,$USER;
-/*
 	$authsequence = get_enabled_auth_plugins(true);
 	foreach($authsequence as $authname){
 		$authplugin = get_auth_plugin($authname);
 		$authplugin->loginpage_hook();
 	}
-*/
 
+	//print_r($authsequence);
+
+	/*
 	$authplugin  = get_auth_plugin('pditt');
 	$authplugin->loginpage_hook();
+	 */
 
 	$frm=new stdClass();
 	$frm->username = $userid;
@@ -455,7 +457,9 @@ function pditt_enter_page($post,$get){
 	
 	$hasil = enter($username,$password);
 
-	if ($hasil->id==0){
+	$d = isset($hasil) ? $hasil->id : 0;
+
+	if ($d==0){
 		echo "Gagal Tersambung";	
 	} else {
 		header("location: $url");
