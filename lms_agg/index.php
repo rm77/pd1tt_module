@@ -462,7 +462,11 @@ function pditt_enter_page($post,$get){
 	if ($d==0){
 		echo "Gagal Tersambung";	
 	} else {
-		header("location: $url");
+?>
+		<script type="text/javascript">
+			window.location.href='<?=$url?>';
+		</script>		
+<?		
 	}
 }
 
