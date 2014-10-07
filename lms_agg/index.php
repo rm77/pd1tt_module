@@ -414,7 +414,6 @@ function pditt_functions($post,$get){
 	}
 	$hasil = array('result'=>12,'cfg'=>array(),'functions'=>$H);
 	return $hasil;
-
 }
 
 function pditt_create_dosen_g($post,$get){
