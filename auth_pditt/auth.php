@@ -109,11 +109,6 @@ class auth_plugin_pditt extends auth_plugin_base {
     	}
 
     	function logoutpage_hook(){
-		global $USER;
-		global $CFG;
-		global $redirect;
-		
-		$redirect=$CFG->wwwroot . '/auth/pditt/logout.php';
     	}
 
 }
