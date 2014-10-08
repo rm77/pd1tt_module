@@ -451,6 +451,12 @@ function pditt_enter_g($post,$get){
 
 function pditt_enter_page($post,$get){
 	global $GLOBAL;
+
+	if (!isset($get['e'])) {
+		echo "Gagal";
+		exit(0);
+	}
+
 	$hasil = get_secure_info($get['e']);
 	$username = $hasil['username'];
 	$password = $hasil['password'];
