@@ -25,6 +25,17 @@ require_once($CFG->dirroot . '/backup/util/ui/import_extensions.php');
 $config = get_config('backup');
 $admin = get_admin();
  
+function get_version(){
+	global $CFG;
+	$namafile = $CFG->dirroot . '/version.php';
+	if (file_exists($namafile)) {
+		include($namafile);
+		return ($branch)+0;
+	} else {
+		return -1;
+	}
+}
+
 
 function backup_template($courseid_from,$settings,$config,$admin) {
 	$bc = new backup_controller(backup::TYPE_1COURSE, $courseid_from, backup::FORMAT_MOODLE,
@@ -119,26 +130,6 @@ function get_secure_info($encrypted){
 	mcrypt_generic_deinit($cipher);
 	$hasil = json_decode($decrypted,true);
 	return $hasil;
-}
-
-function auth($get,$kode){
-	$str  = implode('_',$get);
-	$k = explode('$',$kode);
-	$nonce = isset($k[0]) ? $k[0] : 0;
-	$realcode = isset($k[1]) ? $k[1] :'';
-	$angka=0;
-
-
-	if (file_exists('SITE_CODE')){
-		$d = file_get_contents('SITE_CODE');
-		$angka = ($d)+0;
-	}
-
-	$u = md5($str . '-WEDUS-' . $nonce);
-	
-	return ($u==$realcode) ? true : false;
-
-	
 }
 
 function create_category_if_not_exists($nama,$deskripsi=''){
@@ -393,6 +384,9 @@ $cmd = isset($_GET['c']) ? $_GET['c'] : (isset($_POST['c']) ? $_POST['c'] : 'ind
 //$cmd = isset($_POST['c']) ? $_POST['c'] : 'index';
 $auth = isset($_GET['a']) ? $_GET['a'] : 'xx';
 
+
+
+
 if (function_exists($cmd)){
 	echo json_encode($cmd($post=$_POST,$get=$_GET));
 } else {
@@ -404,7 +398,8 @@ if (function_exists($cmd)){
 /*  MULAI WEB SERVICE */
 
 function index(){
-	$hasil = array('result'=>11,'version'=>'1.1','cr'=>'RM');
+	$str_version = (get_version() >= 26) ? get_version() : 'Version Improper';
+	$hasil = array('result'=>11,'version'=>'1.1','cr'=>'RM','moodle_version'=> $str_version);
 	return $hasil;
 }
 
