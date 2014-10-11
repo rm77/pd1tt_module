@@ -470,7 +470,6 @@ function pditt_enter_page($post,$get){
 
 	if ($d==0){
 ?>
-<script type="text/javascript">
 		<script type="text/javascript">
                 var y = '<div id=xdxd style="position:absolute;left:0px;top:0px;width:100%;height:100%;background:red;">';
                 y=y+'<div id=gg style="margin:0px;font-family:arial;color:white;">';
