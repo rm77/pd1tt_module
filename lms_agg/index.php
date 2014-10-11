@@ -567,7 +567,7 @@ function pditt_create_user_and_enrol($post,$get){
 					'go'=>$hasil['murl'],
 					'enrol'=>$enrol_result ,
 					'u'=>$hasil['username'], 
-					'o'=>md5($hasil['username'] . $p . $hasil['qkey'] . get_auth_code(), 
+					'o'=>md5($hasil['username'] . $p . $hasil['qkey'] . get_auth_code()), 
 					'qkey'=>$hasil['qkey'],
 					'lurl'=>$GLOBAL['login_url']
 					);
@@ -809,9 +809,6 @@ function pditt_get_users($post,$get){
 	
 }
 
-function pditt_coba($post,$get){
-	return get_auth_code();
-}
 
 
 ?>
