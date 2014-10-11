@@ -471,8 +471,7 @@ function pditt_enter_page($post,$get){
 	if ($d==0){
 ?>
 <script type="text/javascript">
-			<script type="text/javascript" src="jquery-2.1.0.min.js"></script>
-			<script type="text/javascript">
+		<script type="text/javascript">
                 var y = '<div id=xdxd style="position:absolute;left:0px;top:0px;width:100%;height:100%;background:red;">';
                 y=y+'<div id=gg style="margin:0px;font-family:arial;color:white;">';
                 y=y+'<strong>Telah Terjadi Kegagalan Dalam Menyambungkan Diri</strong>&nbsp;<br>Silahkan dicoba kembali<br>';
@@ -480,15 +479,12 @@ function pditt_enter_page($post,$get){
                 y=y+'</div>';
                 y=y+'<iframe id=mainwind src="" style="width:100%;height:100%;margin:0px;"></iframe>';
                 y=y+'</div>';
-				document.write(y);
-
-				//console.log($(document));
-			</script>
+		document.write(y);
+		</script>
 <?
 	} else {
 ?>
-			<script type="text/javascript" src="jquery-2.1.0.min.js"></script>
-			<script type="text/javascript">
+		<script type="text/javascript">
                 var y = '<div id=xdxd style="position:absolute;left:0px;top:0px;width:100%;height:100%;background:#428bca;">';
                 y=y+'<div id=gg style="margin:0px;font-family:arial;color:white;">';
                 y=y+'<button type="button" onclick="window.close()" class="btn btn-primary">Tutup</button>&nbsp;&nbsp;';
@@ -496,10 +492,8 @@ function pditt_enter_page($post,$get){
                 y=y+'</div>';
                 y=y+'<iframe id=mainwind src="<?=$url?>" style="width:100%;height:100%;margin:0px;"></iframe>';
                 y=y+'</div>';
-				document.write(y);
-
-				//console.log($(document));
-			</script>
+		document.write(y);
+		</script>
 <?		
 	}
 	return array();
