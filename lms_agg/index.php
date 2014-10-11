@@ -25,6 +25,13 @@ require_once($CFG->dirroot . '/backup/util/ui/import_extensions.php');
 $config = get_config('backup');
 $admin = get_admin();
  
+function get_auth_code(){
+	if (!file_exists('SITE_CODE')){
+		return 'ROMBONGSOTO';
+	}
+	return file_get_contents('SITE_CODE');	
+}
+
 function get_version(){
 	global $CFG;
 	$namafile = $CFG->dirroot . '/version.php';
@@ -122,7 +129,7 @@ $GLOBAL['course_mgt']=curPageURL();
 
 function get_secure_info($encrypted){
 	$e = convert_uudecode($encrypted);
-	$key='ROMBONGSOTO';
+	$key=get_auth_code();
 	$iv='56781234';
  	$cipher = mcrypt_module_open(MCRYPT_BLOWFISH,'','cbc','');
 	mcrypt_generic_init($cipher, $key, $iv);
@@ -560,7 +567,7 @@ function pditt_create_user_and_enrol($post,$get){
 					'go'=>$hasil['murl'],
 					'enrol'=>$enrol_result ,
 					'u'=>$hasil['username'], 
-					'o'=>md5($hasil['username'] . $p . $hasil['qkey'] . 'ROMBONGSOTO'), 
+					'o'=>md5($hasil['username'] . $p . $hasil['qkey'] . get_auth_code(), 
 					'qkey'=>$hasil['qkey'],
 					'lurl'=>$GLOBAL['login_url']
 					);
@@ -584,7 +591,7 @@ function pditt_get_data($post,$get){
 			'user'=>$hasil['username'], 
 			'go'=>$hasil['murl'],
 			'u'=>$hasil['username'], 
-			'o'=>md5($hasil['username'] . $p . $hasil['qkey'] . 'ROMBONGSOTO'), 
+			'o'=>md5($hasil['username'] . $p . $hasil['qkey'] . get_auth_code()), 
 			'qkey'=>$hasil['qkey'],
 			'lurl'=>$GLOBAL['login_url'],
 			'mgt_url'=>$GLOBAL['course_mgt']
@@ -622,7 +629,7 @@ function pditt_create_course($post,$get){
 				'user'=>$username,
 				'go'=> $GLOBAL['course_url'] . '?id=' . $idcourse,
 				'u'=>$username,
-				'o'=>md5($username . $p . $h['qkey'] . 'ROMBONGSOTO'),
+				'o'=>md5($username . $p . $h['qkey'] . get_auth_code()),
 				'qkey'=>$h['qkey'],
 				'lurl'=>$GLOBAL['login_url']
 			);
@@ -790,6 +797,7 @@ function pditt_coba_import($post,$get){
 }
 
 
+
 function pditt_get_courses($post,$get) {
 	global $GLOBAL;
 	return get_courses();
@@ -799,6 +807,10 @@ function pditt_get_courses($post,$get) {
 function pditt_get_users($post,$get){
 	return get_users_confirmed();
 	
+}
+
+function pditt_coba($post,$get){
+	return get_auth_code();
 }
 
 
