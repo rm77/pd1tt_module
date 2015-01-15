@@ -485,10 +485,10 @@ function pditt_enter_page($post,$get){
 ?>
 		<script type="text/javascript">
                 var y = '<div id=xdxd style="position:absolute;left:0px;top:0px;width:100%;height:100%;background:#428bca;">';
-                y=y+'<div id=gg style="margin:0px;font-family:arial;color:white;">';
-                y=y+'<button type="button" onclick="window.close()" class="btn btn-primary">Tutup</button>&nbsp;&nbsp;';
-                y=y+'<strong>&nbsp;&nbsp;Anda sedang berada di lingkungan Learning Management Systems</strong>&nbsp;&nbsp;';
-                y=y+'</div>';
+                //y=y+'<div id=gg style="margin:0px;font-family:arial;color:white;">';
+                //y=y+'<button type="button" onclick="window.close()" class="btn btn-primary">Tutup</button>&nbsp;&nbsp;';
+                //y=y+'<strong>&nbsp;&nbsp;Anda sedang berada di lingkungan Learning Management Systems</strong>&nbsp;&nbsp;';
+                //y=y+'</div>';
                 y=y+'<iframe id=mainwind src="<?=$url?>" style="width:100%;height:100%;margin:0px;"></iframe>';
                 y=y+'</div>';
 		document.write(y);

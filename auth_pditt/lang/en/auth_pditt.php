@@ -15,4 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 
-$string['pluginname'] = 'Pembelajaran Daring ITT';
+$string['pluginname'] = 'Pembelajaran Daring PDITT';
+
+
