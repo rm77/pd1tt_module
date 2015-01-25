@@ -44,7 +44,40 @@ function get_version(){
 }
 
 
-function backup_template($courseid_from,$settings,$config,$admin) {
+function backup_and_restore($courseid_from,$courseid_to,$admin) {
+        global $USER, $CFG;
+
+        // Turn off file logging, otherwise it can't delete the file (Windows).
+        $CFG->backup_file_logger_level = backup::LOG_NONE;
+
+        // Do backup with default settings. MODE_IMPORT means it will just
+        // create the directory and not zip it.
+        $bc = new backup_controller(backup::TYPE_1COURSE, $courseid_from,
+                backup::FORMAT_MOODLE, backup::INTERACTIVE_NO, backup::MODE_IMPORT,
+                $admin->id);
+
+        $backupid = $bc->get_backupid();
+        $bc->execute_plan();
+        $bc->destroy();
+
+        // Do restore to new course with default settings.
+        //$newcourseid = restore_dbops::create_new_course(
+        //        $course_fullname, $course_shortname, $course_category);
+        //directly to particular course id
+		restore_dbops::delete_course_content($courseid_to);
+
+        $rc = new restore_controller($backupid, $courseid_to,
+                backup::INTERACTIVE_NO, backup::MODE_GENERAL, $admin->id,1);
+
+        $rc->execute_precheck();
+        $rc->execute_plan();
+        $rc->destroy();
+
+        return 0;
+    }
+
+
+ function backup_template($courseid_from,$settings,$config,$admin) {
 	$bc = new backup_controller(backup::TYPE_1COURSE, $courseid_from, backup::FORMAT_MOODLE,
 	                            backup::INTERACTIVE_YES, backup::MODE_IMPORT,$admin->id);
 	$backupid = $bc->get_backupid();
@@ -142,11 +175,10 @@ function get_secure_info($encrypted){
 function create_category_if_not_exists($nama,$deskripsi=''){
 	global $DB,  $CFG;
 
-
-	$x = $DB->get_record('course_categories', array('name' => 'PDITT_' . $nama), '*');
+	$x = $DB->get_record('course_categories', array('name' => 'PDITT-' . $nama), '*');
 	if (!$x){
 		$data = new stdClass();
-		$data->name='PDITT_' . $nama;
+		$data->name='PDITT-' . $nama;
 		//$data->idnumber='99';
 		$data->description=$deskripsi;
 		$data->descriptionformat=0;
@@ -158,7 +190,7 @@ function create_category_if_not_exists($nama,$deskripsi=''){
 	}
 }
 
-function create_course_pditt($category,$univ,$kodemk,$namamk,$summary,$startdate=0,$visible=0){
+function create_course_pditt($category,$univ,$kodemk,$namamk,$summary,$startdate=0,$visible=0,$format='topics'){
 	global $DB, $CFG;
 
 
@@ -170,7 +202,8 @@ function create_course_pditt($category,$univ,$kodemk,$namamk,$summary,$startdate
 		$data->shortname = $univ . '-' . $kodemk;
 		$data->summary = $summary;
 		$data->summaryformat=0;
-		$data->format='topics';
+		$data->format=$format;
+		$data->startdate = $startdate;
 		$data->showgrades=1;
 		$data->visible=$visible;
 		$h=create_course($data);
@@ -190,8 +223,8 @@ function create_user_if_not_exists($username,$password,$name_desc,$email,$guid,$
 
 	$record['auth']='pditt';
 	$record['firstname']=$name_desc;
-	$record['lastname']='PDITT';
-	$record['alternatename']='PDITT_' .  $type . '_' . $guid;
+	$record['lastname']=' [' . strtoupper($type). '-PDITT]';
+	$record['alternatename']='PDITT-' .  $type .  '-' . $guid;
 	$record['firstnamephonetic']='';
 	$record['lastnamephonetic']='';
 	$record['email']=$email;
@@ -230,6 +263,8 @@ function cek_user($username,$password){
 }
 
 
+
+
 function create_mhs_if_not_exists($username,$password,$student_name,$email,$guid){
 	return create_user_if_not_exists($username,$password,$student_name,$email,$guid,'mhs');
 }
@@ -258,8 +293,12 @@ function enrol_user_if_not_exists($type='teacher',$userid,$courseid,$timestart=0
 
 	if (!$plugin=enrol_get_plugin('manual')) {
 		$hasil['result']=0;
+
 		return $hasil;
 	}
+
+
+
 
 	$instances = enrol_get_instances($courseid, true);
         foreach ($instances as $instance) {
@@ -278,8 +317,12 @@ function enrol_user_if_not_exists($type='teacher',$userid,$courseid,$timestart=0
 	$cc->visible=1;
 	$cc->visibleold=1;
 	$DB->update_record_raw('course', $cc);
-
 	$plugin->enrol_user($instance, $userid, $role->id, $timestart, $timeend, $status);
+
+//	$the_role = $DB->get_record('role', array('shortname'=>$type));
+//	$instance = $DB->get_record('enrol', array('courseid'=>$courseid, 'enrol'=>'manual'), '*', MUST_EXIST);
+//	$manual = enrol_get_plugin('manual');
+//    $manual-> enrol_user($instance, $userid, $the_role->id);
 	
 	$hasil['result']=31;
 	return $hasil;
@@ -360,6 +403,9 @@ function un_enrol_author($userid,$courseid){
 
 function enter($userid,$password){
 	global $CFG,$USER;
+
+	//print_r($CFG);
+
 	$authsequence = get_enabled_auth_plugins(true);
 	foreach($authsequence as $authname){
 		$authplugin = get_auth_plugin($authname);
@@ -529,6 +575,16 @@ function pditt_create_dosen($post,$get){
 
 }
 
+function pditt_enrol_users($post,$get){
+	global $GLOBAL;
+	$hasil = get_secure_info($post['e']);
+	$user = $hasil['userid'];
+	$course = $hasil['courseid'];
+	$type = $hasil['type'];
+
+	return array('result'=>21, 'result'=>enrol_user_if_not_exists($type='student',$userid,$courseid));
+}
+
 
 function pditt_create_user_and_enrol($post,$get){
 	global $GLOBAL;
@@ -627,6 +683,7 @@ function pditt_create_course($post,$get){
 		$p = $o['d'];
 		$userid = $o['userid'];
 	}
+
 	$cat = create_category_if_not_exists($namacategory,$namacategory . ' (PDITT)');
 	$idcourse = create_course_pditt($cat,$univ,$kodemk,$namamk,$summary);
 	enrol_author_if_not_exists($userid,$idcourse);
@@ -634,7 +691,7 @@ function pditt_create_course($post,$get){
 
 	$hasil = array (
 				'result'=> 21,
-				'user'=>$username,
+				'idcourse'=>$idcourse,
 				'go'=> $GLOBAL['course_url'] . '?id=' . $idcourse,
 				'u'=>$username,
 				'o'=>md5($username . $p . $h['qkey'] . get_auth_code()),
@@ -676,6 +733,7 @@ function pditt_create_course_dan_enrol_dosen($post,$get){
 	$hasil = array (
 				'result'=> 21,
 				'courseid'=>$idcourse,
+				'userid'=>$userid,
 				'courseurl'=>$GLOBAL['course_url'] . '?id=' . $idcourse,
 				'coursemgt'=>$GLOBAL['course_mgt'],
 				'lurl'=>$GLOBAL['login_url']
@@ -737,6 +795,42 @@ function pditt_create_course_test($post,$get){
 }
 
 
+function pditt_create_course_import2($post,$get){
+	global $admin;
+	global $config;
+	global $GLOBAL;
+	$h = get_secure_info($post['e']);
+
+	$settings = array(
+		'activities' => 'backup_auto_activities',
+		'blocks' => 'backup_auto_blocks',
+		'filters' => 'backup_auto_filters',
+		'questionbank'=>'backup_auto_questionbank',
+		'badges'=>'backup_auto_badges',
+		'comments'=>'backup_auto_comments'
+	);
+
+	$course_import_from = $h['course_import_from'];
+	$course_restore_to = $h['course_restore_to'];
+
+	backup_and_restore($course_import_from,$course_restore_to,$admin);
+
+
+	//$restoretarget=1;
+	//$backupid = backup_template($course_import_from,$settings,$config,$admin);
+	//restore_to_course($course_restore_to, $backupid, $restoretarget,$admin);
+
+
+	$hasil = array(
+			'result'	=>	41,
+			'lurl'		=>	$GLOBAL['login_url'],
+			'courseurl'	=>	$GLOBAL['course_url'],
+			'course_import_from'	=>	$course_import_from,
+			'course_restore_to'	=>	$course_restore_to
+	);
+	return $hasil;
+}
+
 function pditt_create_course_import($post,$get){
 	global $admin;
 	global $config;
@@ -769,6 +863,44 @@ function pditt_create_course_import($post,$get){
 	return $hasil;
 }
 
+
+
+function pditt_coba_import2($post,$get){
+	global $admin;
+	global $config;
+	global $GLOBAL;
+	//$h = get_secure_info($post['e']);
+
+	$from = $get['from'];
+	$to = $get['to'];
+
+	$settings = array(
+		'activities' => 'backup_auto_activities',
+		'blocks' => 'backup_auto_blocks',
+		'filters' => 'backup_auto_filters',
+		'questionbank'=>'backup_auto_questionbank',
+		'badges'=>'backup_auto_badges',
+		'comments'=>'backup_auto_comments'
+	);
+
+	$course_import_from = $from;
+	$course_restore_to = $to;
+
+	backup_and_restore($course_import_from,$course_restore_to,$admin);
+
+	//$restoretarget=1;
+	//$backupid = backup_template($course_import_from,$settings,$config,$admin);
+	//restore_to_course($course_restore_to, $backupid, $restoretarget,$admin);
+
+
+	$hasil = array(
+			'result'	=>	41,
+			'course_import_from'	=>	$course_import_from,
+			'course_restore_to'	=>	$course_restore_to
+	);
+	return $hasil;
+}
+
 function pditt_coba_import($post,$get){
 	global $admin;
 	global $config;
@@ -795,16 +927,14 @@ function pditt_coba_import($post,$get){
 
 
 	$hasil = array(
-			'result'	=>	41,
-			'lurl'		=>	$GLOBAL['login_url'],
-			'courseurl'	=>	$GLOBAL['course_url'],
+			'result'				=>	41,
+			'lurl'					=>	$GLOBAL['login_url'],
+			'courseurl'				=>	$GLOBAL['course_url'],
 			'course_import_from'	=>	$course_import_from,
-			'course_restore_to'	=>	$course_restore_to
+			'course_restore_to'		=>	$course_restore_to
 	);
 	return $hasil;
 }
-
-
 
 function pditt_get_courses($post,$get) {
 	global $GLOBAL;
