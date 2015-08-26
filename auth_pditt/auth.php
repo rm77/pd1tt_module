@@ -41,8 +41,8 @@ class auth_plugin_pditt extends auth_plugin_base {
     function user_login ($username, $password) {
 	    global $CFG, $DB, $USER;
 
-            //if (!$user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
-            if (!$user = $DB->get_record('user', array('username'=>$username))) {
+        //if (!$user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+        if (!$user = $DB->get_record('user', array('username'=>$username))) {
 	           return false;
 	    }
 
@@ -52,11 +52,10 @@ class auth_plugin_pditt extends auth_plugin_base {
 	    
 	    //echo $username . '-->' . $password . '-->' . $user->password . "\n";
 
-	    $cek_x = md5($username . $user->password . $k[1] . 'ROMBONGSOTO');
+	    $cek_x = sha1($username . $user->password . $k[1]);
 	    $cek_y = $k[0];
 
 	    //echo 'cekx=' . $cek_x . '--->' . 'ceky=' . $cek_y . "\n";
-
 	    if ($cek_x!=$cek_y){
 	    	return false;
 	    }
