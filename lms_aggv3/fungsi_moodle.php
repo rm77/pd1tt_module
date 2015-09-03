@@ -25,13 +25,13 @@ $moodle_config = get_config('backup');
 $moodle_admin = get_admin();
 
 
-function find_course_pditt($kodemk){
+function find_course_pditt($idnumber){
     global $DB,  $CFG;
-    $x = $DB->get_record('course', array('shortname' => $kodemk), '*');
+    $x = $DB->get_record('course', array('idnumber' => $idnumber), '*');
     if (!$x){
         return -1;
     } else {
-        return array('id'=>$x->id,'url'=> COURSE_URL . '?id=' . $x->id);
+        return array('id'=>$x->id,'idnumber'=> $x->idnumber ,'url'=> COURSE_URL . '?id=' . $x->id);
     }
 
 }
@@ -52,12 +52,13 @@ function create_category_pditt($nama,$deskripsi=''){
     }
 }
 
-function create_course_pditt($category,$kodemk,$namamk,$summary,$startdate=0,$visible=0,$format='topics'){
+function create_course_pditt($category,$idnumber,$kodemk,$namamk,$summary,$startdate=0,$visible=0,$format='topics'){
     global $DB, $CFG;
-    $x = $DB->get_record('course', array('shortname' => $kodemk), '*');
+    $x = $DB->get_record('course', array('idnumber'=>$idnumber, 'shortname'=>$kodemk), '*');
     if (!$x) {
         $data = new stdClass();
         $data->category=$category;
+        $data->idnumber = $idnumber;
         $data->fullname=$namamk;
         $data->shortname = $kodemk;
         $data->summary = $summary;
@@ -69,11 +70,23 @@ function create_course_pditt($category,$kodemk,$namamk,$summary,$startdate=0,$vi
         $h=create_course($data);
         return $h->id; 
     } else {
+        $data = new stdClass();
+        $data->fullname=$namamk;
+        $data->idnumber = $idnumber;
+        $data->shortname = $kodemk;
+        $data->summary = $summary;
+        $data->id = $x->id;
+        update_course($data);
         return $x->id;
     }
 
 }
 
+
+function delete_course_pditt($courseid){
+    delete_course($courseid,$showfeedback=false);
+    return true;
+}
 
 function create_user_pditt($username,$password,$name_desc,$email,$guid,$type){
     global $DB, $CFG;

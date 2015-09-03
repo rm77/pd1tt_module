@@ -114,27 +114,31 @@ function create_course(){
 		$dosen[]=array('username'=>'kadal_1','password'=>'12345','nama'=>'Daley Blind1999','email'=>'blink1999@bl.co.id','guid'=>'18929993133aa');
 		$dosen[]=array('username'=>'kadal_2','password'=>'12345','nama'=>'Daley Blind2999','email'=>'blink2999@bl.co.id','guid'=>'99928923133aa');
 		$dosen[]=array('username'=>'kadal_3','password'=>'12345','nama'=>'Daley Blind3999','email'=>'blink3999@bl.co.id','guid'=>'38999923133aa');
+		$dosen[]=array('username'=>'kadal_4','password'=>'12345','nama'=>'Daley Blind3995','email'=>'blink39945@bl.co.id','guid'=>'3899992313223aa');
+
+		$uniqid = '55e123a12c2ce';
 
 		$data = array();
-		$data['kodemk']='002002XX4009';
-		$data['namamk']='Matematika Lanjut USIA';
-		$data['summary']='Matematika Yang Harus Dilanjutkan';
+		$data['idnumber']=$uniqid;
+		$data['kodemk']='002002XX400911';
+		$data['namamk']='Matematika X1 Rubah 12';
+		$data['summary']='Matematika X1 ssummary Rubah 112';
 
 		$Token = new TokenMaker('PDITTCreateCourse','X123','LMS1','abcd123','http://localhost/moodle/pditt_module/lms_aggv3/lms/gate');
-		$Token->add_command('PDITT_CreateCourse',$data,'27-08-2015 12:00');
+		$Token->add_command('PDITT_CreateCourse',$data,'27-08-2016 12:00');
 
 
 		$data=array();
-		$data['kodemk']='002002XX4009';
+		$data['idnumber']=$uniqid;
 		$data['tipe']='author';
 		$data['list']=$dosen;
-		$Token->add_command('PDITT_Enrol',$data,'27-08-2015 12:00');
+		$Token->add_command('PDITT_Enrol',$data,'27-08-2016 12:00');
 
 		$data=array();
-		$data['kodemk']='002002XX4009';
+		$data['idnumber']=$uniqid;
 		$data['tipe']='dosen';
 		$data['list']=$dosen;
-		$Token->add_command('PDITT_Enrol',$data,'27-08-2015 12:00');
+		$Token->add_command('PDITT_Enrol',$data,'27-08-2016 12:00');
 
 
 		$infohttp=array();
@@ -149,7 +153,8 @@ function create_course(){
 
 function find_course(){
 	$data = array();
-	$data['kodemk']='002002XX400XX9';
+	$uniqid = '55e123a12c2ce';
+	$data['idnumber']=$uniqid;
 	$Token = new TokenMaker('PDITTFindID','X123','LMS1','abcd123','http://localhost/moodle/pditt_module/lms_aggv3/lms/gate');
 	$Token->add_command('PDITT_FindCourseID',$data,'29-08-2015 12:00');
 	
@@ -169,9 +174,10 @@ function user_connect(){
 	$data = array();
 	$data['username']='blind_daley123';
 	$data['password']='12345';
-	$data['kodemk']='002002CS1404';
+	$uniqid = '55e123a12c2ce';
+	$data['idnumber']=$uniqid;
 	$Token = new TokenMaker('PDITTConnect','X123','LMS1','abcd123','http://localhost/moodle/pditt_module/lms_aggv3/lms/gate');
-	$Token->add_command('PDITT_UserConnect',$data,'24-08-2015 12:00');
+	$Token->add_command('PDITT_UserConnect',$data,'24-08-2018 12:00');
 	
 
 
@@ -209,34 +215,34 @@ function open_course(){
 	$mhs[]=array('username'=>'blind_daley303','password'=>'12345','nama'=>'Daley Blind303','email'=>'blink303@bl.co.id','guid'=>'18923133aaX303');
 
 
+
+	$idkelas='55e123a12c2ceAAA';
 	$data = array();
-	$data['univ']='002002';
-	$data['tahun']='2015';
-	$data['periode']='1';
-	$data['kodemk']='002002CS1404';
-	$data['namamk']='Matematika 1 2';
-	$data['summary']='Matematika 1 2 a';
+    $data['matkul_idnumber']='55e123a12c2ce';
+    $data['kelas_idnumber']=$idkelas;
+    $data['nama_kelas']='KELAS 1';
+
 	$Token = new TokenMaker('PDITTCourse','X123','LMS1','abcd123','http://localhost/moodle/pditt_module/lms_aggv3/lms/gate');
-	$Token->add_command('PDITT_OpenCourse',$data,'24-08-2015 12:00');
+	$Token->add_command('PDITT_OpenCourse',$data,'28-08-2016 12:00');
 
 
 	$data=array();
-	$data['kodemk']='002002CS1404';
+	$data['idnumber']=$idkelas;
 	$data['tipe']='dosen';
 	$data['list']=$dosen;
-	$Token->add_command('PDITT_Enrol',$data,'24-08-2015 12:00');
+	$Token->add_command('PDITT_Enrol',$data,'24-08-2016 12:00');
 
 	$data=array();
-	$data['kodemk']='002002CS1404';
+	$data['idnumber']=$idkelas;
 	$data['tipe']='tutor';
 	$data['list']=$tutor;
-	$Token->add_command('PDITT_Enrol',$data,'24-08-2015 12:00');
+	$Token->add_command('PDITT_Enrol',$data,'24-08-2016 12:00');
 
 	$data=array();
-	$data['kodemk']='002002CS1404';
+	$data['idnumber']=$idkelas;
 	$data['tipe']='mhs';
 	$data['list']=$mhs;
-	$Token->add_command('PDITT_Enrol',$data,'24-08-2015 12:00');
+	$Token->add_command('PDITT_Enrol',$data,'24-08-2016 12:00');
 
 	$infohttp=array();
 	$infohttp['token']=$Token->get_credential();
@@ -247,8 +253,9 @@ function open_course(){
 }
 
 //create_course();
-//open_course();
+//find_course();
+open_course();
 //user_connect();
-find_course();
+//find_course();
 
 ?>
