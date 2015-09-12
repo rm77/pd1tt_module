@@ -54,7 +54,8 @@ function create_category_pditt($nama,$deskripsi=''){
 
 function create_course_pditt($category,$idnumber,$kodemk,$namamk,$summary,$startdate=0,$visible=0,$format='topics'){
     global $DB, $CFG;
-    $x = $DB->get_record('course', array('idnumber'=>$idnumber, 'shortname'=>$kodemk), '*');
+    //$x = $DB->get_record('course', array('idnumber'=>$idnumber, 'shortname'=>$kodemk), '*');
+    $x = $DB->get_record('course', array('idnumber'=>$idnumber), '*');
     if (!$x) {
         $data = new stdClass();
         $data->category=$category;
