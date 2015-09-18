@@ -14,6 +14,14 @@ $app->get('/asem',function () use ($app){
     print_r($app->request->get());
 });
 
+$app->post('/lmsg',function() use ($app){
+            $token = $app->request->post('token');
+            if (strlen($token)>0)
+                serve($app,$token);
+            else
+                $app->notFound();
+});
+
 $app->group('/lms', function () use ($app) {
     $app->post('/gate', function () use ($app) {
             $token = $app->request->post('token');

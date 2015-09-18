@@ -38,7 +38,7 @@ function find_course_pditt($idnumber){
 
 function create_category_pditt($nama,$deskripsi=''){
     global $DB,  $CFG;
-    $x = $DB->get_record('course_categories', array('name' => 'PDITT-' . $nama), '*');
+    $x = $DB->get_record('course_categories', array('name' => $nama), '*');
     if (!$x){
         $data = new stdClass();
         $data->name=$nama;

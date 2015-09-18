@@ -43,6 +43,7 @@ function serve($slimapp,$token){
         $result[]=array('errcode'=>1000, 'msg'=>'invalid Token');
     }
     $slimapp->response->headers->set('Content-Type','application/json');
+    $slimapp->response->headers->set('Access-Control-Allow-Origin','*');
     $slimapp->response->write(json_encode($result));
 }
 

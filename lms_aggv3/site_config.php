@@ -3,8 +3,8 @@ $GLOBAL = array();
 $GLOBAL['lms_fungsi']='fungsi_lms.php';
 $GLOBAL['lms_id']='c298a9ab-4c08-11e5-866e-04209a4154d2';
 $GLOBAL['lms_secret']='abcd123';
-$GLOBAL['lms_desc']='LMS1';
-$GLOBAL['lms_url']='http://localhost/moodle/pditt_module/lms_aggv3/lms/gate';
-$GLOBAL['lms_token_server']='http://localhost/aggregator/auth/gate';
+$GLOBAL['lms_desc']='LMS2';
+$GLOBAL['lms_url']='http://kuliahdaring.dikti.go.id/lms102/pditt_module/lms_aggv3/lms/gate';
+$GLOBAL['lms_token_server']='http://kuliahdaring.dikti.go.id/auth/';
 $GLOBAL['lms_deskripsi']='LMS Universitas PDITT';
 ?>
