@@ -1,7 +1,5 @@
 <?
-define('MOODLE_LOCATION','/var/www/html/moodle');
-define('COURSE_URL','http://localhost/moodle/course/view.php');
-
+include "moodle_def.php";
 require (MOODLE_LOCATION . '/config.php');
 @ini_set('display_errors', '1');
 $CFG->debug = 6143; 
@@ -38,7 +36,7 @@ function find_course_pditt($idnumber){
 
 function create_category_pditt($nama,$deskripsi=''){
     global $DB,  $CFG;
-    $x = $DB->get_record('course_categories', array('name' => $nama), '*');
+    $x = $DB->get_record('course_categories', array('name' => 'PDITT-' . $nama), '*');
     if (!$x){
         $data = new stdClass();
         $data->name=$nama;
