@@ -1,0 +1,4 @@
+<?
+define('MOODLE_LOCATION','/var/www/html/moodle/');
+define('COURSE_URL','http://localhost/moodle/course/view.php');
+?>
