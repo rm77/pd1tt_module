@@ -84,7 +84,7 @@ function PDITT_OpenCourse($data){
                 $kelas_fullname = $x2->fullname;
                 $kelas_summary = $x2->summary;
 
-                $cat = create_category_pditt('KELAS-' . date("Y"));
+                $cat = create_category_pditt('KELAS' . date("Y"));
                 $id_course_tujuan = create_course_pditt($cat,$idnumber_kelas,$kelas_shortname,$kelas_fullname,$kelas_summary);
 
                 $settings = array(
