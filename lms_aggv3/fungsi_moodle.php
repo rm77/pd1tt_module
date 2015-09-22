@@ -39,7 +39,7 @@ function create_category_pditt($nama,$deskripsi=''){
     $x = $DB->get_record('course_categories', array('name' => 'PDITT-' . $nama), '*');
     if (!$x){
         $data = new stdClass();
-        $data->name=$nama;
+        $data->name='PDITT-' . $nama;
         $data->description=$deskripsi;
         $data->descriptionformat=0;
         $data->parent=0;
