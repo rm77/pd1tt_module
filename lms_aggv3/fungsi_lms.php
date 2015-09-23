@@ -98,7 +98,7 @@ function PDITT_OpenCourse($data){
                 $course_import_from = $id_course_asal;
                 $course_restore_to = $id_course_tujuan;
 
-                $restoretarget=1;
+                $restoretarget=backup::TARGET_CURRENT_ADDING;
                 $backupid = backup_template($course_import_from,$settings,$moodle_config,$moodle_admin);
                 restore_to_course($course_restore_to, $backupid, $restoretarget,$moodle_admin);
 

@@ -361,7 +361,7 @@ function restore_to_course($courseid, $backupid, $restoretarget, $admin) {
     }
  
     $rc = new restore_controller($backupid, $courseid, backup::INTERACTIVE_YES, 
-                                backup::MODE_IMPORT,$admin->id,1);
+                                backup::MODE_IMPORT,$admin->id,$restoretarget);
  
     // Convert the backup if required.... it should NEVER happed
     if ($rc->get_status() == backup::STATUS_REQUIRE_CONV) {
@@ -372,9 +372,9 @@ function restore_to_course($courseid, $backupid, $restoretarget, $admin) {
     // Execute prechecks
     $rc->execute_precheck();
     
-    if ($restoretarget == backup::TARGET_CURRENT_DELETING || $restoretarget == backup::TARGET_EXISTING_DELETING) {
-        restore_dbops::delete_course_content($courseid);
-    }
+    //if ($restoretarget == backup::TARGET_CURRENT_DELETING || $restoretarget == backup::TARGET_EXISTING_DELETING) {
+    //    restore_dbops::delete_course_content($courseid);
+    //}
     // Execute the restore.
     $rc->execute_plan();
     $rc->destroy();
