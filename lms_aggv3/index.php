@@ -10,8 +10,9 @@ $app->token_extractor_instance = new TokenExtractor($app->global['lms_id'],$app-
 
 
 
-$app->get('/asem',function () use ($app){
-    print_r($app->request->get());
+$app->get('/test',function () use ($app){
+	echo json_encode(array('version'=>3));
+	exit(0);
 });
 
 $app->post('/lmsg',function() use ($app){
